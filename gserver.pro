@@ -16,8 +16,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        gserver.cpp
+        gserver.cpp \
+    ../gclient/msock.cpp
 
-HEADERS  += gserver.h
+HEADERS  += gserver.h \
+    ../gclient/msock.h
 
 FORMS    += gserver.ui
+
+INCLUDEPATH += ../gclient/
