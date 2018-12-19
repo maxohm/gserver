@@ -1,1 +1,1 @@
-# gserver
+GAMMA TEST SERVER
