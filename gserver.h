@@ -26,9 +26,12 @@ private slots:
     //
     void log(QString s);
     //
+    void tx(QString s);
+    void rx();
+
 private:
-    //
-    Ui::gserver *ui;
+        //
+        Ui::gserver *ui;
     //
     int conn_lim;
     QTcpServer *listener;

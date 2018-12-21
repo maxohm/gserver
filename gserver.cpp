@@ -17,11 +17,12 @@ gserver::gserver(QWidget *parent) :
                 stport)){
         log("gserver::gserver listener listening on port "+QString::number(stport));
         log("gserver::gserver listener->maxPendingConnections() = "+QString::number(conn_lim));
+        //
+        this->setWindowTitle("GSERVER 127.0.0.1:"+QString::number(stport));
     } else {
         log("gserver::gserver failed to setup listener on port "+QString::number(stport));
     };
-
-
+    //
     msock* s = new msock();
     connect(s->ticker, SIGNAL(timeout()), this, SLOT(climon()));
     connect(listener, SIGNAL(newConnection()), this, SLOT(cliconnect()));
@@ -33,50 +34,44 @@ gserver::~gserver()
 }
 
 
+void  gserver::tx(QString s)
+{
+}
+
+void  gserver::rx()
+{
+}
+
 void gserver::climon()
 {
-    log("gserver::climon() id ");
-//    for (int i=1; i<=conn_lim; i++){
-//        QStringList* h = new QStringList(
-//                    st[i]->state.split("|")
-//                    );
-//        if (h->size()>2) log("gserver::climon() id "+h->at(2));
-//    };
+    log("gserver::climon()");
 }
 
 
 void gserver::cliconnect()
 {
     int id = st.count();
-
-
-    if (conn_lim>id){
-        id++;
-        msock* s = new msock(id);
-        st.append(s);
-        //
-        QStringList* h = new QStringList(
-                          s->state.split("|")
-                          );
-        log("gserver::cliconnect() id "+h->at(1));
-    };
-
-    //for (int i=0; i<st.count(); i++){
-
-
-//        if ( NULL==s.) {
-//          log("gserver::climon() id "+QString::number(i));
-//          return;
-//        };
-//        QStringList* h = new QStringList(
-//                    st[i]->state.split("|")
-//                    );
-//        if (h->size()<3) {
-//            st[i]->sock = listener->nextPendingConnection();
-//
-//        }
-    //};
-
+    if (conn_lim<=id) return;
+    id++;
+    //
+    msock* s = new msock();
+    s->ticker->stop();
+    s->state.replace(
+                QString::number(stport),
+                QString::number(stport+id)
+                );
+    s->sock = listener->nextPendingConnection();
+    s->sock->waitForConnected();
+    //
+    QStringList* h = new QStringList(
+                s->state.split("|")
+                );
+    log("gserver::cliconnect() id "+h->at(1));
+    //
+    s->tx(s->state);
+    connect(s->sock,SIGNAL(readyRead()),s,SLOT(cmd()));
+    //
+    st.append(s);
 }
 
 void gserver::clidisconn()
@@ -89,9 +84,9 @@ void gserver::log(QString s)
 {
     QDate d = QDate::currentDate();
     QTime c = QTime::currentTime();
-
+    //
     int rc = ui->log->rowCount();
-
+    //
     ui->log->insertRow(rc);
     QTableWidgetItem *t= new QTableWidgetItem (d.toString("dd.MM.yy")+" "+c.toString("hh:mm:ss")+" "+s);
     ui->log->setItem(rc,0,t);
