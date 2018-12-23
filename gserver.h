@@ -20,22 +20,22 @@ public:
     ~gserver();
 
 private slots:
-    void climon();
     void cliconnect();
     void clidisconn();
     //
     void log(QString s);
+    void monitor();
     //
-    void tx(QString s);
     void rx();
+    void tx(QString s);
 
 private:
-        //
-        Ui::gserver *ui;
+    //
+    Ui::gserver *ui;
     //
     int conn_lim;
-    QTcpServer *listener;
-    QList<msock*> st;    // Client states
+    QTcpServer* listener;
+    QList<msock*> st;
 };
 
 #endif // GSERVER_H

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>GSERVER</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../gclient/g.png</normaloff>../gclient/g.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTableWidget" name="log">
     <property name="geometry">
